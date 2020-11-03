@@ -39,25 +39,13 @@ func onMsgCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	isCharSearchMsg := strings.HasPrefix(userMsg, charSearchCmd)
 	if isCharSearchMsg {
-		s.ChannelMessageSend(m.ChannelID, "Searching character data...")
-		msg, err := generateCharSearchMsg(userMsg)
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, err.Error())
-			return
-		}
-		s.ChannelMessageSend(m.ChannelID, msg)
+		s.ChannelMessageSend(m.ChannelID, generateUserFacingMsg(userMsg, generateCharSearchMsg))
 		return
 	}
 
 	isRaidSearchMsg := strings.HasPrefix(userMsg, raidSearchCmd)
 	if isRaidSearchMsg {
-		s.ChannelMessageSend(m.ChannelID, "Searching raid data...")
-		msg, err := generateRaidSearchMsg(userMsg)
-		if err != nil {
-			s.ChannelMessageSend(m.ChannelID, err.Error())
-			return
-		}
-		s.ChannelMessageSend(m.ChannelID, msg)
+		s.ChannelMessageSend(m.ChannelID, generateUserFacingMsg(userMsg, generateRaidSearchMsg))
 		return
 	}
 }
@@ -65,6 +53,14 @@ func onMsgCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 func generateHelpMsg() string {
 	helpMsg := fmt.Sprintf("Example: %s bfa asmongold us kel'thuzad\n", raidSearchCmd)
 	return helpMsg
+}
+
+func generateUserFacingMsg(userInput string, msgGenerator func(string) (string, error)) string {
+	msg, err := msgGenerator(userInput)
+	if err != nil {
+		return err.Error()
+	}
+	return msg
 }
 
 type apiCharSearchData struct {
