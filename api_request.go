@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+// sendGetRequest sends an HTTP GET request to `url`, storing data
+// inside `v` if successful.
 func sendGetRequest(url string, v interface{}) error {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -25,6 +27,8 @@ func sendGetRequest(url string, v interface{}) error {
 	return json.Unmarshal(body, &v)
 }
 
+// constructAccessTokenRequestURL returns a region-specific URL that can
+// be used to obtain an access token from the Blizzard OAuth API.
 func constructAccessTokenRequestURL(serverRegion string) string {
 	url := fmt.Sprintf(
 		"https://%s.battle.net/oauth/token",
@@ -38,6 +42,8 @@ func constructAccessTokenRequestURL(serverRegion string) string {
 	return url + queryParams
 }
 
+// getAccessTokenFromBlizzardAPI requests an access token from the
+// Blizzard OAuth API, returning it if successful.
 func getAccessTokenFromBlizzardAPI(serverRegion string) (string, error) {
 	if _, ok := findRegion(serverRegion); !ok {
 		return "", errors.New("could not find server region")
@@ -52,6 +58,8 @@ func getAccessTokenFromBlizzardAPI(serverRegion string) (string, error) {
 	return accessToken.Value, nil
 }
 
+// constructRaidProfileRequestURL returns a URL that can be used to
+// query the Blizzard encounter summary API.
 func constructRaidProfileRequestURL(params apiRaidSearchData, region region, accessToken string) string {
 	url := fmt.Sprintf(
 		"https://%s.api.blizzard.com/profile/wow/character/%s/%s/encounters/raids",
@@ -68,6 +76,8 @@ func constructRaidProfileRequestURL(params apiRaidSearchData, region region, acc
 	return url + queryParams
 }
 
+// getRaidProfileFromBlizzardAPI sends an HTTP GET request to the
+// Blizzard encounter summary API.
 func getRaidProfileFromBlizzardAPI(params apiRaidSearchData, accessToken string) (string, error) {
 	region, ok := findRegion(params.serverRegion)
 	if !ok {
@@ -89,6 +99,8 @@ func getRaidProfileFromBlizzardAPI(params apiRaidSearchData, accessToken string)
 	return respData.ExpansionString(key), nil
 }
 
+// constructCharProfileRequestURL returns a URL that can be used to
+// query the Blizzard character summary API.
 func constructCharProfileRequestURL(params apiCharSearchData, region region, accessToken string) string {
 	url := fmt.Sprintf(
 		"https://%s.api.blizzard.com/profile/wow/character/%s/%s",
@@ -105,6 +117,8 @@ func constructCharProfileRequestURL(params apiCharSearchData, region region, acc
 	return url + queryParams
 }
 
+// getCharProfileFromBlizzardAPI sends an HTTP GET request to the
+// Blizzard character summary API.
 func getCharProfileFromBlizzardAPI(params apiCharSearchData, accessToken string) (string, error) {
 	region, ok := findRegion(params.serverRegion)
 	if !ok {
