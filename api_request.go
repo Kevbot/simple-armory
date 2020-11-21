@@ -96,7 +96,8 @@ func constructCharProfileRequestURL(params apiCharSearchData, region region, acc
 		params.realmSlug,
 		params.characterSlug,
 	)
-	queryParams := fmt.Sprintf("?namespace=%s&locale=%s&access_token=%s",
+	queryParams := fmt.Sprintf(
+		"?namespace=%s&locale=%s&access_token=%s",
 		region.namespace,
 		region.locale,
 		accessToken,
