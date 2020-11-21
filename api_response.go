@@ -118,7 +118,7 @@ func (data raidProfileData) ExpansionString(expansionKey int) string {
 		for _, mode := range instance.Modes {
 			msg += fmt.Sprintf("• %s %d/%d\n", mode.Difficulty.Name, mode.Progress.CompletedCount, mode.Progress.TotalCount)
 		}
-		msg += fmt.Sprintln()
+		msg += "\n"
 	}
 	return msg
 }
