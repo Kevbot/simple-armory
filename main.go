@@ -10,13 +10,11 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func init() {
+func main() {
 	if err := godotenv.Load("dev.env"); err != nil {
 		log.Fatalln("error loading .env file:", err)
 	}
-}
 
-func main() {
 	discordToken := os.Getenv("DISCORD_TOKEN")
 	session, err := discordgo.New("Bot " + discordToken)
 	if err != nil {
